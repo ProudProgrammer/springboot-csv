@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	function append(value, color) {
+		$('#data').append($('<div>', {
+			text : value
+		}).css({
+			'color' : color
+		}));
+	}
+
+	$(document).ready(function() {
+		$("button").click(function() {
+			$('#data').empty();
+			$.ajax({
+				type : 'GET',
+				url : 'http://localhost:8080/data',
+				data : {
+					get_param : 'value'
+				},
+				dataType : 'json',
+				success : function(data) {
+					$.each(data, function(index, element) {
+						switch (element.type) {
+							case 'DATASTORE1':
+								append(element.value, 'red');
+								break;
+							case 'DATASTORE2':
+								append(element.value, 'green');
+								break;
+							case 'DATASTORE3':
+								append(element.value, 'blue');
+								break;
+							default:
+								break;
+						}
+					});
+				}
+			});
+		});
+	});
+</script>
+<title>Get Data</title>
+</head>
+<body>
+	<button>Get Data</button>
+	<div id="data"></div>
+</body>
+</html>
