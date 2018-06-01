@@ -1,6 +1,6 @@
 package hu.gaborbalazs.practice.springboot.model;
 
-import hu.gaborbalazs.practice.springboot.enums.DataStoreType;
+import hu.gaborbalazs.practice.springboot.enums.DataStore;
 
 public class Data {
 
@@ -8,12 +8,12 @@ public class Data {
 
 	private String value;
 
-	private DataStoreType type;
+	private DataStore type;
 
 	public Data() {
 	}
 
-	public Data(String key, String value, DataStoreType type) {
+	public Data(String key, String value, DataStore type) {
 		this.key = key;
 		this.value = value;
 		this.type = type;
@@ -35,11 +35,11 @@ public class Data {
 		this.value = value;
 	}
 
-	public DataStoreType getType() {
+	public DataStore getType() {
 		return type;
 	}
 
-	public void setType(DataStoreType type) {
+	public void setType(DataStore type) {
 		this.type = type;
 	}
 

@@ -1,39 +1,34 @@
 package hu.gaborbalazs.practice.springboot.rest;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import hu.gaborbalazs.practice.springboot.data.DataStoreProcessor;
+import hu.gaborbalazs.practice.springboot.exception.BaseException;
+import hu.gaborbalazs.practice.springboot.exception.ExceptionMessage;
 import hu.gaborbalazs.practice.springboot.model.Data;
 
-@org.springframework.web.bind.annotation.RestController
-public class RestController {
+@RestController
+public class DataController {
 
-	private Logger logger = LoggerFactory.getLogger(RestController.class);
-
-	private static final String ERR_FILE = "Data store corrupt or not found";
+	@Autowired
+	private Logger logger;
 
 	@Autowired
 	private DataStoreProcessor dataStoreProcessor;
-
-	@RequestMapping("echo")
-	public String echo() {
-		return "Hello World";
-	}
 
 	@RequestMapping("data")
 	public List<Data> getDataStore() {
 		try {
 			return dataStoreProcessor.getAllData();
 		} catch (IOException e) {
-			logger.error(ERR_FILE, e);
+			logger.error(ExceptionMessage.ERR_FILE, e);
+			throw new BaseException(ExceptionMessage.ERR_FILE);
 		}
-		return Collections.emptyList();
 	}
 }

@@ -23,8 +23,8 @@ public class SpringbootApplicationTests {
 	
 	@Test
 	public void testEcho() {
-		String body = restTemplate.getForObject("http://localhost:8080/echo", String.class);
-		assertThat(body).isEqualTo("Hello World");
+		String body = restTemplate.getForObject("http://localhost:8080/data", String.class);
+		assertThat(body).isNotEmpty();
 	}
 
 }
