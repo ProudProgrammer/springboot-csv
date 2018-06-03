@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.gaborbalazs.practice.springboot.data.DataStoreProcessor;
 import hu.gaborbalazs.practice.springboot.exception.BaseException;
-import hu.gaborbalazs.practice.springboot.exception.ExceptionMessage;
+import hu.gaborbalazs.practice.springboot.exception.ExceptionType;
 import hu.gaborbalazs.practice.springboot.model.Data;
 
 @RestController
@@ -27,8 +27,8 @@ public class DataController {
 		try {
 			return dataStoreProcessor.getAllData();
 		} catch (IOException e) {
-			logger.error(ExceptionMessage.ERR_FILE, e);
-			throw new BaseException(ExceptionMessage.ERR_FILE);
+			logger.error(ExceptionType.DATA_STORE_CORRUPT.getExceptionMessage(), e);
+			throw new BaseException(ExceptionType.DATA_STORE_CORRUPT);
 		}
 	}
 }

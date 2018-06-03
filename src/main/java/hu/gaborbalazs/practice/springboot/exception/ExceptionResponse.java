@@ -2,20 +2,17 @@ package hu.gaborbalazs.practice.springboot.exception;
 
 public class ExceptionResponse {
 
-	private String message;
+	private ExceptionType exceptionType;
 
-	public ExceptionResponse() {
+	public ExceptionResponse(ExceptionType exceptionType) {
+		this.exceptionType = exceptionType;
 	}
 
-	public ExceptionResponse(String message) {
-		this.message = message;
+	public ExceptionType getExceptionType() {
+		return exceptionType;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
+	public void setExceptionType(ExceptionType exceptionType) {
+		this.exceptionType = exceptionType;
 	}
 }

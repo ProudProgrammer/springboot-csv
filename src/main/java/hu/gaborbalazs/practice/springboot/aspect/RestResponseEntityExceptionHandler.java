@@ -14,10 +14,10 @@ import hu.gaborbalazs.practice.springboot.exception.ExceptionResponse;
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ResponseBody
 	@ExceptionHandler(BaseException.class)
-	public ExceptionResponse handleTestException(RuntimeException ex, WebRequest request) {
-		return new ExceptionResponse(ex.getMessage());
+	public ExceptionResponse handleTestException(BaseException exception, WebRequest request) {
+		return new ExceptionResponse(exception.getExceptionType());
 	}
 }
