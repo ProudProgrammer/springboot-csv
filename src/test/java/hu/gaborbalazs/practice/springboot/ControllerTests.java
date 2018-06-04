@@ -14,14 +14,20 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SpringbootApplicationTests {
+public class ControllerTests {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Test
-	public void getHealtCheck() throws Exception {
+	public void getHealtCheckTest() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/actuator/health").accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+	
+	@Test
+	public void getDataTest() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/data").accept(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
