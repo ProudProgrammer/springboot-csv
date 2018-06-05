@@ -1,8 +1,8 @@
 package hu.gaborbalazs.practice.springboot.data;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import hu.gaborbalazs.practice.springboot.enums.DataStore;
@@ -21,15 +22,16 @@ public class DataStoreProcessor {
 	public List<Data> getAllDataFromDataStores() throws IOException {
 		List<Data> datas = new ArrayList<>();
 		for (DataStore dataStore : DataStore.values()) {
-			datas.addAll(csvToData(new File(dataStore.getPath()), dataStore));
+			datas.addAll(csvToData(new InputStreamReader(new ClassPathResource(dataStore.getPath()).getInputStream()),
+					dataStore));
 		}
 		sortDataByValueThenIfEqualsByKey(datas);
 		return datas;
 	}
 
-	private List<Data> csvToData(File file, DataStore dataStore) throws IOException {
+	private List<Data> csvToData(Reader reader, DataStore dataStore) throws IOException {
 		List<Data> datas = new ArrayList<>();
-		try (CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT)) {
+		try (CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT)) {
 			parser.getRecords().forEach(record -> datas
 					.add(Data.builder().key(record.get(0)).value(record.get(1).toUpperCase()).type(dataStore).build()));
 		}

@@ -2,9 +2,8 @@ package hu.gaborbalazs.practice.springboot;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +13,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 import hu.gaborbalazs.practice.springboot.data.DataStoreProcessor;
 import hu.gaborbalazs.practice.springboot.enums.DataStore;
@@ -33,7 +33,9 @@ public class DataStoreProcessorTest {
 		List<Data> actual = underTest.getAllDataFromDataStores();
 		List<Data> expected = new ArrayList<>();
 		for (DataStore dataStore : DataStore.values()) {
-			try (CSVParser parser = new CSVParser(new FileReader(new File(dataStore.getPath())), CSVFormat.DEFAULT)) {
+			try (CSVParser parser = new CSVParser(
+					new InputStreamReader(new ClassPathResource(dataStore.getPath()).getInputStream()),
+					CSVFormat.DEFAULT)) {
 				parser.getRecords().forEach(record -> expected.add(
 						Data.builder().key(record.get(0)).value(record.get(1).toUpperCase()).type(dataStore).build()));
 			}
