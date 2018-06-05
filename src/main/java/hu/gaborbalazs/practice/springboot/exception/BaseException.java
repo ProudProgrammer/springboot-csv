@@ -14,8 +14,4 @@ public class BaseException extends RuntimeException {
 		return exceptionType;
 	}
 
-	public void setExceptionType(ExceptionType exceptionType) {
-		this.exceptionType = exceptionType;
-	}
-
 }

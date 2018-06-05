@@ -11,8 +11,4 @@ public class ExceptionResponse {
 	public ExceptionType getExceptionType() {
 		return exceptionType;
 	}
-
-	public void setExceptionType(ExceptionType exceptionType) {
-		this.exceptionType = exceptionType;
-	}
 }

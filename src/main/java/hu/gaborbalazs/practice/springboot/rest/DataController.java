@@ -25,7 +25,7 @@ public class DataController {
 	@RequestMapping("data")
 	public List<Data> getDataStore() {
 		try {
-			return dataStoreProcessor.getAllData();
+			return dataStoreProcessor.getAllDataFromDataStores();
 		} catch (IOException e) {
 			logger.error(ExceptionType.DATA_STORE_CORRUPT.getExceptionMessage(), e);
 			throw new BaseException(ExceptionType.DATA_STORE_CORRUPT);

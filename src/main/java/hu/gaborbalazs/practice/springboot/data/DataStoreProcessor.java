@@ -18,25 +18,30 @@ import hu.gaborbalazs.practice.springboot.model.Data;
 @Component
 public class DataStoreProcessor {
 
-	public List<Data> getAllData() throws IOException {
+	public List<Data> getAllDataFromDataStores() throws IOException {
 		List<Data> datas = new ArrayList<>();
 		for (DataStore dataStore : DataStore.values()) {
 			datas.addAll(csvToData(new File(dataStore.getPath()), dataStore));
 		}
-		Collections.sort(datas, (data1, data2) -> {
-			Comparator<Data> c = Comparator.comparing(Data::getValue);
-			c = c.thenComparing(Data::getKey);
-			return c.compare(data1, data2);
-		});
+		sortDataByValueThenIfEqualsByKey(datas);
 		return datas;
 	}
 
 	private List<Data> csvToData(File file, DataStore dataStore) throws IOException {
 		List<Data> datas = new ArrayList<>();
 		try (CSVParser parser = new CSVParser(new FileReader(file), CSVFormat.DEFAULT)) {
-			parser.getRecords()
-					.forEach(record -> datas.add(new Data(record.get(0), record.get(1).toUpperCase(), dataStore)));
+			parser.getRecords().forEach(record -> datas
+					.add(Data.builder().key(record.get(0)).value(record.get(1).toUpperCase()).type(dataStore).build()));
 		}
+		return datas;
+	}
+
+	private List<Data> sortDataByValueThenIfEqualsByKey(List<Data> datas) {
+		Collections.sort(datas, (data1, data2) -> {
+			Comparator<Data> c = Comparator.comparing(Data::getValue);
+			c = c.thenComparing(Data::getKey);
+			return c.compare(data1, data2);
+		});
 		return datas;
 	}
 }
