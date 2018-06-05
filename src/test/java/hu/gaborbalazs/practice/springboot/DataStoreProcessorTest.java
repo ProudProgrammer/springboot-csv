@@ -1,10 +1,17 @@
 package hu.gaborbalazs.practice.springboot;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import org.junit.Assert;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,21 +32,22 @@ public class DataStoreProcessorTest {
 	public void testGetAllDataFromDataStores() throws IOException {
 		List<Data> actual = underTest.getAllDataFromDataStores();
 		List<Data> expected = new ArrayList<>();
-		expected.add(Data.builder().key("9").value("B").type(DataStore.DATASTORE1).build());
-		expected.add(Data.builder().key("1").value("D").type(DataStore.DATASTORE3).build());
-		expected.add(Data.builder().key("22").value("E").type(DataStore.DATASTORE3).build());
-		expected.add(Data.builder().key("12").value("F").type(DataStore.DATASTORE3).build());
-		expected.add(Data.builder().key("10").value("G").type(DataStore.DATASTORE3).build());
-		expected.add(Data.builder().key("18").value("G").type(DataStore.DATASTORE2).build());
-		expected.add(Data.builder().key("3").value("M").type(DataStore.DATASTORE1).build());
-		expected.add(Data.builder().key("24").value("P").type(DataStore.DATASTORE2).build());
-		expected.add(Data.builder().key("25").value("Q").type(DataStore.DATASTORE2).build());
-		expected.add(Data.builder().key("13").value("T").type(DataStore.DATASTORE3).build());
-		expected.add(Data.builder().key("20").value("U").type(DataStore.DATASTORE2).build());
-		expected.add(Data.builder().key("7").value("V").type(DataStore.DATASTORE1).build());
-		expected.add(Data.builder().key("19").value("W").type(DataStore.DATASTORE2).build());
-		expected.add(Data.builder().key("5").value("X").type(DataStore.DATASTORE1).build());
-		expected.add(Data.builder().key("76").value("Y").type(DataStore.DATASTORE1).build());
-		Assert.assertEquals(expected, actual);
+		for (DataStore dataStore : DataStore.values()) {
+			try (CSVParser parser = new CSVParser(new FileReader(new File(dataStore.getPath())), CSVFormat.DEFAULT)) {
+				parser.getRecords().forEach(record -> expected.add(
+						Data.builder().key(record.get(0)).value(record.get(1).toUpperCase()).type(dataStore).build()));
+			}
+		}
+		Collections.sort(expected, (data1, data2) -> {
+			Comparator<Data> c = Comparator.comparing(Data::getValue);
+			c = c.thenComparing(Data::getKey);
+			return c.compare(data1, data2);
+		});
+		assertEquals(expected.size(), actual.size());
+		for (int i = 0; i < expected.size(); i++) {
+			assertEquals(expected.get(i).getKey(), actual.get(i).getKey());
+			assertEquals(expected.get(i).getValue(), actual.get(i).getValue());
+			assertEquals(expected.get(i).getType(), actual.get(i).getType());
+		}
 	}
 }
