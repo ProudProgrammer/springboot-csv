@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import hu.gaborbalazs.practice.springboot.aspect.RestResponseEntityExceptionHandler;
 import hu.gaborbalazs.practice.springboot.data.DataStoreProcessor;
+import hu.gaborbalazs.practice.springboot.exception.ExceptionType;
 import hu.gaborbalazs.practice.springboot.rest.DataController;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +50,6 @@ public class DataControllerNegativeTest {
 		when(dataStoreProcessor.getAllDataFromDataStores()).thenThrow(IOException.class);
 		mvc.perform(MockMvcRequestBuilders.get("/data").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is5xxServerError())
-				.andExpect(content().json("{'exceptionType':'DATA_STORE_CORRUPT'}"));
+				.andExpect(content().json("{'exceptionType':'" + ExceptionType.DATA_STORE_CORRUPT + "'}"));
 	}
 }
